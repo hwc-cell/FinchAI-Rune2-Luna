@@ -6,6 +6,8 @@
 > 相比 v2（[`whcl412/FinchAI-Rune2-f16`](https://huggingface.co/whcl412/FinchAI-Rune2-f16)）：
 > 补了 139 条多轮样本，**多轮复读从 1 次降到 0 次**，其余能力全部保持。
 
+**精度：f16（bfloat16 完整权重，3.24 GiB，未量化）**。仓库名不带精度后缀，以此处为准。
+
 ![RinchAI 三代能力对比](./benchmark.png)
 
 > 图中数据：Rune1 为 7 项探针 × 5 次抽样，Rune2 为 14 项探针 × 2 次抽样，
@@ -13,7 +15,8 @@
 
 | | |
 |---|---|
-| **本仓库** | `RinchAI-Rune2-Luna`（bfloat16 完整权重，3.24 GiB） |
+| **本仓库** | `RinchAI-Rune2-Luna` |
+| **精度** | **f16 / bfloat16 完整权重**（3.24 GiB，未量化、未蒸馏） |
 | **能力范围** | 纯文本（**不含视觉**） |
 | **上下文窗口** | 262144（256K），与底座一致；**但只在 1024 token 内训练过** |
 | **加载方式** | `AutoModelForCausalLM` + `trust_remote_code=True` |
