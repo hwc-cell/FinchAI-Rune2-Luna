@@ -1,6 +1,6 @@
-# RinchAI-Rune2-Luna
+# FinchAI-Rune2-Luna
 
-> RinchAI 系列第 2 代 · **Luna**。底座 [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B)，
+> FinchAI 系列第 2 代 · **Luna**。底座 [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B)，
 > LoRA 微调，专注**工具调用判断力**与**多轮对话稳定性**。
 >
 > 相比 v2（[`whcl412/FinchAI-Rune2-f16`](https://huggingface.co/whcl412/FinchAI-Rune2-f16)）：
@@ -8,14 +8,14 @@
 
 **精度：f16（bfloat16 完整权重，3.24 GiB，未量化）**。仓库名不带精度后缀，以此处为准。
 
-![RinchAI 三代能力对比](./benchmark.png)
+![FinchAI 三代能力对比](./benchmark.png)
 
 > 图中数据：Rune1 为 7 项探针 × 5 次抽样，Rune2 为 14 项探针 × 2 次抽样，
 > 各维度取该维度下所有探针的平均通过率。**两代口径不完全一致，仅供参考趋势。**
 
 | | |
 |---|---|
-| **本仓库** | `RinchAI-Rune2-Luna` |
+| **本仓库** | `FinchAI-Rune2-Luna` |
 | **精度** | **f16 / bfloat16 完整权重**（3.24 GiB，未量化、未蒸馏） |
 | **能力范围** | 纯文本（**不含视觉**） |
 | **上下文窗口** | 262144（256K），与底座一致；**但只在 1024 token 内训练过** |
@@ -79,7 +79,7 @@ pip install "transformers>=5.18.0" torch accelerate
 ```python
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-model_id = "whcl412/RinchAI-Rune2-Luna"
+model_id = "whcl412/FinchAI-Rune2-Luna"
 tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_id, dtype="bfloat16", device_map="auto", trust_remote_code=True)
@@ -182,7 +182,7 @@ if ans and last_ans and ans.strip() == last_ans:
 
 ## 七、项目信息
 
-- 训练脚本与数据：[GitHub · hwc-cell/RinchAI-Rune2-Luna](https://github.com/hwc-cell/RinchAI-Rune2-Luna)
+- 训练脚本与数据：[GitHub · hwc-cell/FinchAI-Rune2-Luna](https://github.com/hwc-cell/FinchAI-Rune2-Luna)
 - 上一版：[whcl412/FinchAI-Rune2-f16](https://huggingface.co/whcl412/FinchAI-Rune2-f16)（v2，1200 条）
 - 第一代：[whcl412/FinchAI-Rune1-Preview-v2-f16](https://huggingface.co/whcl412/FinchAI-Rune1-Preview-v2-f16)
 - 底座：[LiquidAI/LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B)
