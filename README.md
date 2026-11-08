@@ -1,30 +1,30 @@
-# FinchAI-Rune2 v3
+# RinchAI-Rune2-Luna
 
-> FinchAI 系列第 2 代 · **v3 续训版**。底座 [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B)，
+> RinchAI 系列第 2 代 · **Luna**。底座 [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B)，
 > LoRA 微调，专注**工具调用判断力**与**多轮对话稳定性**。
 >
 > 相比 v2（[`whcl412/FinchAI-Rune2-f16`](https://huggingface.co/whcl412/FinchAI-Rune2-f16)）：
 > 补了 139 条多轮样本，**多轮复读从 1 次降到 0 次**，其余能力全部保持。
 
-![FinchAI 三代能力对比](./benchmark.png)
+![RinchAI 三代能力对比](./benchmark.png)
 
 > 图中数据：Rune1 为 7 项探针 × 5 次抽样，Rune2 为 14 项探针 × 2 次抽样，
 > 各维度取该维度下所有探针的平均通过率。**两代口径不完全一致，仅供参考趋势。**
 
 | | |
 |---|---|
-| **本仓库** | `-v3-f16`（bfloat16 完整权重，3.24 GiB） |
+| **本仓库** | `RinchAI-Rune2-Luna`（bfloat16 完整权重，3.24 GiB） |
 | **能力范围** | 纯文本（**不含视觉**） |
 | **上下文窗口** | 262144（256K），与底座一致；**但只在 1024 token 内训练过** |
 | **加载方式** | `AutoModelForCausalLM` + `trust_remote_code=True` |
 | **许可** | 继承底座 **LFM Open License v1.0**（不是 Apache 2.0） |
 
-## 一、v3 改了什么
+## 一、Luna 改了什么
 
 v2 实测到一个严重问题：**连续聊到第 3~4 轮开始复读**——上下文里重复的模式会自我强化，
 问什么都回同一句（实测「😊 笑脸。」连了四轮）。
 
-v3 补了专门数据来治它：
+Luna 补了专门数据来治它：
 
 | 数据类型 | 条数 | 教什么 |
 |---|---|---|
@@ -39,7 +39,7 @@ v3 补了专门数据来治它：
 
 按 5 个能力维度归并（每个维度取该维度下所有探针的平均通过率）：
 
-| 能力维度 | Rune1 v2 | Rune2 v2 | Rune2 v3 |
+| 能力维度 | Rune1 v2 | Rune2 v2 | Rune2 Luna |
 |---|---|---|---|
 | 身份自述 | 60% | 100% | **100%** |
 | 工具调用 | 67% | 100% | **100%** |
@@ -51,7 +51,7 @@ v3 补了专门数据来治它：
 ⚠️ **口径说明**：Rune1 是 7 项探针 × 5 次抽样，Rune2 是 14 项探针 × 2 次抽样。
 两代测试集不完全相同，上表是按维度归并后的近似对比，**看趋势而不是看小数点**。
 
-v3 的实际多轮表现：
+Luna 的实际多轮表现：
 
 ```
 说几个emoji → 😊🥳🎉👍👎📦📄📝🖋️💡🐛💻🚀🏠🌙  需要更多或者按主题分组？
@@ -76,7 +76,7 @@ pip install "transformers>=5.18.0" torch accelerate
 ```python
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-model_id = "whcl412/FinchAI-Rune2-v3-f16"
+model_id = "whcl412/RinchAI-Rune2-Luna"
 tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_id, dtype="bfloat16", device_map="auto", trust_remote_code=True)
@@ -113,7 +113,7 @@ print(tok.decode(out[0], skip_special_tokens=True))
 
 ### 1. 多轮仍建议做防护（虽然已经好很多）
 
-v3 把复读治住了，但**上下文窗口建议仍然别开太长**：
+Luna 把复读治住了，但**上下文窗口建议仍然别开太长**：
 
 ```python
 if len(msgs) > 9:                      # 只留最近 4 轮
@@ -159,7 +159,7 @@ if ans and last_ans and ans.strip() == last_ans:
 
 - 底座：LFM3-1.7B（1.73B，三混合架构）
 - 方法：LoRA r=8 / alpha=16，target 为 `q/k/v/o_proj` + `in_proj` + `out_proj` + `gate_proj`
-- **v3 = 从 v2 的 adapter 续训**：+139 条多轮样本，83 步（0.5 epoch），lr 5e-5，15 分钟
+- **Luna = 从 v2 的 adapter 续训**：+139 条多轮样本，83 步（0.5 epoch），lr 5e-5，15 分钟
 - 数据总量 1339 条，六类：agent 28.5% / 多轮 21.7% / refuse 17.0% /
   code 14.9% / 闲聊 9.6% / 身份 8.4%
 - 数据来源：DeepSeek V4.1-Flash 蒸馏（关键能力）+ 手写补充
@@ -179,7 +179,7 @@ if ans and last_ans and ans.strip() == last_ans:
 
 ## 七、项目信息
 
-- 训练脚本与数据：[GitHub · hwc-cell/FinchAI-Rune2](https://github.com/hwc-cell/FinchAI-Rune2)
+- 训练脚本与数据：[GitHub · hwc-cell/RinchAI-Rune2-Luna](https://github.com/hwc-cell/RinchAI-Rune2-Luna)
 - 上一版：[whcl412/FinchAI-Rune2-f16](https://huggingface.co/whcl412/FinchAI-Rune2-f16)（v2，1200 条）
 - 第一代：[whcl412/FinchAI-Rune1-Preview-v2-f16](https://huggingface.co/whcl412/FinchAI-Rune1-Preview-v2-f16)
 - 底座：[LiquidAI/LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B)
